@@ -19,12 +19,13 @@ public class Main {
                 System.out.println("    2: INSERIR PACIENTE");
                 System.out.println("    3: DELETAR PACIENTE");
                 System.out.println("    4: ATUALIZAR PACIENTE");
+                System.out.println("    5: CONSULTAR PACIENTE");
                 System.out.print(": ");
                 int opcao = scan.nextInt();
 
                 switch(opcao){
                     case 1:
-                        PacientesOper.consultarPacientes();;
+                        PacientesOper.consultarPacientes();
                         break;
                     case 2:
                         PacientesOper.inserirPaciente();
@@ -35,6 +36,9 @@ public class Main {
                     case 4:
                         PacientesOper.modificarPaciente();
                         break;
+                    case 5:
+                        PacientesOper.consultarPaciente();
+                        break;
                     default:
                         System.out.println("Nenhuma opção válida inserida.");
                         break;
@@ -43,12 +47,12 @@ public class Main {
                 System.out.print("true/false: ");
                 ativo = scan.nextBoolean();
             }
-            System.out.println("---------------------------------");
-            System.out.println("------- FECHANDO PROGRAMA -------");
-            System.out.println("---------------------------------");
+            System.out.println("-------------------------------------------------------");
+            System.out.println("----------------- FECHANDO PROGRAMA -------------------");
+            System.out.println("-------------------------------------------------------");
         } catch(Exception e){
-                System.out.println("|         ERRO NA EXECUÇÃO         |");
-                System.out.println(e.getMessage());
+            System.out.println("|         ERRO NA EXECUÇÃO         |");
+            System.out.println(e.getMessage());
         } finally {
             scan.close();
         }

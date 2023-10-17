@@ -25,7 +25,7 @@ public class PacientesOper {
                 String sexo = rs.getString("sexo");
 
                 System.out.println("|  "+id+"  | "+nome+"        | "+idade+"    | "+cpf+"     |   "+sexo+"   |");
-            }
+            }   
             System.out.println("+-----+-----------+-------+----------------+-------+");
         } catch(Exception e){
             System.out.println("------- ERRO: consulta de pacientes -------");
@@ -61,9 +61,7 @@ public class PacientesOper {
         } catch(Exception e){
             System.out.println("------- ERRO: inserção de paciente -------");
             System.out.println(e.getMessage());
-        } finally {
-            scan.close();
-        }
+        } 
     }
 
     public static void deletarPaciente(){
@@ -85,9 +83,7 @@ public class PacientesOper {
         } catch(Exception e){
             System.out.println("------- ERRO: deletar paciente -------");
             System.out.println(e.getMessage());
-        } finally{
-            scan.close();
-        }
+        } 
     }
 
     public static void modificarPaciente(){
@@ -119,8 +115,35 @@ public class PacientesOper {
         } catch (Exception e) {
             System.out.println("------- ERRO: modificar paciente -------");
             System.out.println(e.getMessage());
-        }finally{
-            scan.close();
         }
+    }
+
+    public static void consultarPaciente(){
+        Scanner scan = new Scanner(System.in);
+        System.out.print("Digite o id do paciente que deseja consultar: ");
+        int id = scan.nextInt();
+
+        try {
+            Connection conn = DatabaseConn.getDatabaseConnection().getConnection();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM pacientes WHERE id = "+id);
+
+            System.out.println("+-----+--------------+-------+----------------+-------+");
+            System.out.println("|  id | nome         | idade | cpf            | sexo  |");
+            System.out.println("+-----+--------------+-------+----------------+-------+");
+
+            while (rs.next()) {
+                String nome = rs.getString("nome");
+                int idade = rs.getInt("idade");
+                String cpf = rs.getString("cpf");
+                String sexo = rs.getString("sexo");
+                System.out.println("|  "+id+"  | "+nome+"        | "+idade+"    | "+cpf+"     |   "+sexo+"   |");
+            }
+            System.out.println("+-----+--------------+-------+----------------+-------+");
+
+        } catch(Exception e){
+            System.out.println("------- ERRO: consultar paciente -------");
+            System.out.println(e.getMessage());
+        } 
     }
 }
