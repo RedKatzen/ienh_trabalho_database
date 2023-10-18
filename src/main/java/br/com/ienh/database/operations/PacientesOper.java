@@ -55,6 +55,7 @@ public class PacientesOper {
             int linhasAfetadas = stmt.executeUpdate("INSERT INTO pacientes (nome, idade, cpf, sexo) VALUES ('"+nome+"', "+idade+", '"+cpf+"', '"+sexo+"');");
             if(linhasAfetadas == 1) {
                 System.out.println("Dados inseridos com sucesso.");
+                ProntuariosOper.criarProntuario(nome, stmt);
             } else {
                 System.out.println("Erro ao inserir os dados.");
             }
@@ -132,15 +133,17 @@ public class PacientesOper {
             System.out.println("|  id | nome         | idade | cpf            | sexo  |");
             System.out.println("+-----+--------------+-------+----------------+-------+");
 
+            String nome = "";
+
             while (rs.next()) {
-                String nome = rs.getString("nome");
+                nome = rs.getString("nome");
                 int idade = rs.getInt("idade");
                 String cpf = rs.getString("cpf");
                 String sexo = rs.getString("sexo");
                 System.out.println("|  "+id+"  | "+nome+"        | "+idade+"    | "+cpf+"     |   "+sexo+"   |");
             }
             System.out.println("+-----+--------------+-------+----------------+-------+");
-
+            ProntuariosOper.resgatarProntuario(nome, stmt);
         } catch(Exception e){
             System.out.println("------- ERRO: consultar paciente -------");
             System.out.println(e.getMessage());
