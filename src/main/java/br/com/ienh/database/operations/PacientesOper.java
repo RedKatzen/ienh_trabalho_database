@@ -39,6 +39,13 @@ public class PacientesOper {
             Connection conn = DatabaseConn.getDatabaseConnection().getConnection();
             Statement stmt = conn.createStatement();
 
+            ResultSet rs = stmt.executeQuery("SELECT * FROM pacientes");
+            int id = 0;
+            while (rs.next()) {
+                id = rs.getInt("id");
+            }
+
+            System.out.println("|          CRIAR PACIENTE         |");
             System.out.println("Infome os seguintes dados do paciente:");
             System.out.print("Nome: ");
             String nome = scan.next();
@@ -54,10 +61,10 @@ public class PacientesOper {
 
             int linhasAfetadas = stmt.executeUpdate("INSERT INTO pacientes (nome, idade, cpf, sexo) VALUES ('"+nome+"', "+idade+", '"+cpf+"', '"+sexo+"');");
             if(linhasAfetadas == 1) {
-                System.out.println("Dados inseridos com sucesso.");
-                ProntuariosOper.criarProntuario(nome, stmt);
+                System.out.println("\nDados inseridos com sucesso.\n");
+                ProntuariosOper.criarProntuario(id, stmt);
             } else {
-                System.out.println("Erro ao inserir os dados.");
+                System.out.println("\nErro ao inserir os dados.");
             }
         } catch(Exception e){
             System.out.println("------- ERRO: inserção de paciente -------");
@@ -67,6 +74,7 @@ public class PacientesOper {
 
     public static void deletarPaciente(){
         Scanner scan = new Scanner(System.in);
+        System.out.println("|          DELETAR PACIENTE         |");
         System.out.print("Informe o id do paciente que deseja deletar: ");
         int id = scan.nextInt();
 
@@ -77,9 +85,10 @@ public class PacientesOper {
             int linhasAfetadas = stmt.executeUpdate("DELETE FROM pacientes WHERE id = "+id);
 
             if(linhasAfetadas == 1){
-                System.out.println("Dados deletados com sucesso.");
+                System.out.println("\nDados deletados com sucesso.");
+                ProntuariosOper.deletarProntuario(id, stmt);
             } else {
-                System.out.println("Erro ao deletar os dados.");
+                System.out.println("\nErro ao deletar os dados.");
             }
         } catch(Exception e){
             System.out.println("------- ERRO: deletar paciente -------");
@@ -89,6 +98,7 @@ public class PacientesOper {
 
     public static void modificarPaciente(){
         Scanner scan = new Scanner(System.in);
+        System.out.println("|          MODIFICAR PACIENTE         |");
         System.out.print("Digite o id do paciente que deseja modificar: ");
         int id = scan.nextInt();
 
@@ -108,9 +118,9 @@ public class PacientesOper {
 
             int linhasAfetadas = stmt.executeUpdate("UPDATE pacientes SET nome = '"+nome+"', idade = "+idade+", cpf = '"+cpf+"' WHERE id = "+id+";");
             if(linhasAfetadas == 1){
-                System.out.println("Dados modificados com sucesso.");
+                System.out.println("\nDados modificados com sucesso.");
             } else {
-                System.out.println("Erro ao modificar os dados.");
+                System.out.println("\nErro ao modificar os dados.");
             }
             
         } catch (Exception e) {
@@ -121,6 +131,7 @@ public class PacientesOper {
 
     public static void consultarPaciente(){
         Scanner scan = new Scanner(System.in);
+        System.out.println("|          CONSULTAR PACIENTE         |");
         System.out.print("Digite o id do paciente que deseja consultar: ");
         int id = scan.nextInt();
 
@@ -133,17 +144,14 @@ public class PacientesOper {
             System.out.println("|  id | nome         | idade | cpf            | sexo  |");
             System.out.println("+-----+--------------+-------+----------------+-------+");
 
-            String nome = "";
-
             while (rs.next()) {
-                nome = rs.getString("nome");
+                String nome = rs.getString("nome");
                 int idade = rs.getInt("idade");
                 String cpf = rs.getString("cpf");
                 String sexo = rs.getString("sexo");
                 System.out.println("|  "+id+"  | "+nome+"        | "+idade+"    | "+cpf+"     |   "+sexo+"   |");
             }
-            System.out.println("+-----+--------------+-------+----------------+-------+");
-            ProntuariosOper.resgatarProntuario(nome, stmt);
+            ProntuariosOper.resgatarProntuario(id);
         } catch(Exception e){
             System.out.println("------- ERRO: consultar paciente -------");
             System.out.println(e.getMessage());

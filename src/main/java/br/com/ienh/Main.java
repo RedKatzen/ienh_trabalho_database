@@ -2,6 +2,7 @@ package br.com.ienh;
 
 import java.util.Scanner;
 import br.com.ienh.database.operations.PacientesOper;
+import br.com.ienh.database.operations.ProntuariosOper;
 import br.com.ienh.database.util.ClearConsole;
 
 public class Main {
@@ -20,6 +21,8 @@ public class Main {
                 System.out.println("    3: DELETAR PACIENTE");
                 System.out.println("    4: ATUALIZAR PACIENTE");
                 System.out.println("    5: CONSULTAR PACIENTE");
+                System.out.println("    6: INSERIR PRONTUÁRIO");
+                System.out.println("    7: MODIFICAR PRONTUÁRIO");
                 System.out.print(": ");
                 int opcao = scan.nextInt();
 
@@ -38,6 +41,12 @@ public class Main {
                         break;
                     case 5:
                         PacientesOper.consultarPaciente();
+                        break;
+                    case 6:
+                        ProntuariosOper.criarProntuario();
+                        break;
+                    case 7:
+                        ProntuariosOper.modificarProntuario();
                         break;
                     default:
                         System.out.println("Nenhuma opção válida inserida.");
