@@ -8,14 +8,38 @@ import br.com.ienh.database.DatabaseConn;
 
 public class PacientesOper {
     public static void consultarPacientes() {
+        Scanner scan = new Scanner(System.in);
         try{
             Connection conn = DatabaseConn.getDatabaseConnection().getConnection();
             Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM pacientes");
+            ResultSet rs = null;
 
-            System.out.println("+-----+--------------+-------+----------------+-------+");
-            System.out.println("|  id | nome         | idade | cpf            | sexo  |");
-            System.out.println("+-----+--------------+-------+----------------+-------+");
+            System.out.print("Queres ordernar a tabela? (true/false) : ");
+            boolean bool = scan.nextBoolean();
+
+            if(bool == true){
+                System.out.println("Digite uma das seguintes opções de ordenamento:");
+                System.out.println("    1: BUSCA PELA MENOR IDADE");
+                System.out.println("    2: BUSCA PELA MAIOR IDADE");
+                System.out.print(": ");
+                int opcao = scan.nextInt();
+
+                switch (opcao) {
+                    case 1:
+                        rs = stmt.executeQuery("SELECT * FROM pacientes ORDER BY idade ASC;");
+                        break;
+                    case 2:
+                        rs = stmt.executeQuery("SELECT * FROM pacientes ORDER BY idade DESC;"); 
+                    default:
+                        break;
+                }
+            } else {
+                rs = stmt.executeQuery("SELECT * FROM pacientes;");
+            }
+            
+            System.out.println("+-----+-----------------+-------+---------------+------+");
+            System.out.println("|  id | nome            | idade | cpf           | sexo |");
+            System.out.println("+-----+-----------------+-------+---------------+------+");
 
             while(rs.next()){
                 int id = rs.getInt("id");
@@ -24,9 +48,9 @@ public class PacientesOper {
                 String cpf = rs.getString("cpf");
                 String sexo = rs.getString("sexo");
 
-                System.out.println("|  "+id+"  | "+nome+"        | "+idade+"    | "+cpf+"     |   "+sexo+"   |");
+                System.out.format("| %3d | %-15s | %-5d | %-13s | %-4s |\n", id, nome, idade, cpf, sexo);
             }   
-            System.out.println("+-----+-----------+-------+----------------+-------+");
+            System.out.println("+-----+-----------------+-------+---------------+------+");
         } catch(Exception e){
             System.out.println("------- ERRO: consulta de pacientes -------");
             System.out.println(e.getMessage());
@@ -140,16 +164,16 @@ public class PacientesOper {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM pacientes WHERE id = "+id);
 
-            System.out.println("+-----+--------------+-------+----------------+-------+");
-            System.out.println("|  id | nome         | idade | cpf            | sexo  |");
-            System.out.println("+-----+--------------+-------+----------------+-------+");
+            System.out.println("+-----+-----------------+-------+---------------+------+");
+            System.out.println("|  id | nome            | idade | cpf           | sexo |");
+            System.out.println("+-----+-----------------+-------+---------------+------+");
 
             while (rs.next()) {
                 String nome = rs.getString("nome");
                 int idade = rs.getInt("idade");
                 String cpf = rs.getString("cpf");
                 String sexo = rs.getString("sexo");
-                System.out.println("|  "+id+"  | "+nome+"        | "+idade+"    | "+cpf+"     |   "+sexo+"   |");
+                System.out.format("| %3d | %-15s | %-5d | %-13s | %-4s |\n", id, nome, idade, cpf, sexo);
             }
             ProntuariosOper.resgatarProntuario(id);
         } catch(Exception e){

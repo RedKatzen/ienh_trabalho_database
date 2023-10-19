@@ -23,6 +23,7 @@ public class Main {
                 System.out.println("    5: CONSULTAR PACIENTE");
                 System.out.println("    6: INSERIR PRONTUÁRIO");
                 System.out.println("    7: MODIFICAR PRONTUÁRIO");
+                System.out.println("    8: CONSULTAR PRONTUÁRIO");
                 System.out.print(": ");
                 int opcao = scan.nextInt();
 
@@ -47,6 +48,9 @@ public class Main {
                         break;
                     case 7:
                         ProntuariosOper.modificarProntuario();
+                        break;
+                    case 8:
+                        ProntuariosOper.consultarProntuarios();
                         break;
                     default:
                         System.out.println("Nenhuma opção válida inserida.");

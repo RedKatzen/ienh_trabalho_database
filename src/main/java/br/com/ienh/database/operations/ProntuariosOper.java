@@ -3,6 +3,8 @@ package br.com.ienh.database.operations;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
 
 import br.com.ienh.database.DatabaseConn;
@@ -14,17 +16,23 @@ public class ProntuariosOper {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM prontuarios WHERE id_paciente = "+idPaciente);
 
-            System.out.println("+-----+----------------+--------------+----------------+-------------------------+");
-            System.out.println("| id  | entrada        | saida        | doença         | diagnostico             |");
-            System.out.println("+-----+----------------+--------------+----------------+-------------------------+");
+            System.out.println("\n|                                 PRONTUÁRIO                                  |");
+            System.out.println("+-----+------------+------------+---------------------------+-----------------+");
+            System.out.println("|  id | Entrada    | Saída      | Diagnóstico               | Doença          |");
+            System.out.println("+-----+------------+------------+---------------------------+-----------------+");
 
             while(rs.next()) {
                 int id = rs.getInt("id");
-                String entrada = rs.getString("entrada_hospital");
-                String saida = rs.getString("saida_hospital");
+                String dataEntradaStr = rs.getString("entrada_hospital");
+                String dataSaidaStr = rs.getString("saida_hospital");
                 String diagnostico = rs.getString("diagnostico");
                 String doenca = rs.getString("doenca");
-                System.out.println("| "+id+"  | "+entrada+"        | "+saida+"        | "+doenca+"         | "+diagnostico+"              ");
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                Date dataEntrada = dateFormat.parse(dataEntradaStr);
+                Date dataSaida = dateFormat.parse(dataSaidaStr);
+
+                System.out.format("| %3d | %-10tF | %-10tF | %-25s | %-15s |\n", id, dataEntrada, dataSaida, diagnostico, doenca);
             }
         } catch(Exception e){
             System.out.println("------- ERRO: resgatar prontuário -------");
@@ -141,6 +149,59 @@ public class ProntuariosOper {
             }
         } catch (Exception e) {
             System.out.println("------- ERRO: deletar prontuário -------");
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public static void consultarProntuarios() {
+        Scanner scan = new Scanner(System.in);
+        try{
+            Connection conn = DatabaseConn.getDatabaseConnection().getConnection();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = null;
+
+            System.out.print("Queres ordernar a tabela? (true/false) : ");
+            boolean bool = scan.nextBoolean();
+
+            if(bool == true){
+                System.out.println("Digite uma das seguintes opções de ordenamento:");
+                System.out.println("    1: BUSCA PELA DATA DE ENTRADA MAIS ANTIGA");
+                System.out.println("    2: BUSCA PELA DATA DE SAÍDA MAIS RECENTE");
+                System.out.print(": ");
+                int opcao = scan.nextInt();
+
+                switch (opcao) {
+                    case 1:
+                        rs = stmt.executeQuery("SELECT * FROM prontuarios ORDER BY entrada_hospital ASC;");
+                        break;
+                    case 2:
+                        rs = stmt.executeQuery("SELECT * FROM prontuarios ORDER BY saida_hospital DESC;"); 
+                    default:
+                        break;
+                }
+            } else {
+                rs = stmt.executeQuery("SELECT * FROM prontuarios;");
+            }
+
+            System.out.println("+-----+------------+------------+---------------------------+-----------------+");
+            System.out.println("|  id | Entrada    | Saída      | Diagnóstico               | Doença          |");
+            System.out.println("+-----+------------+------------+---------------------------+-----------------+");
+
+            while(rs.next()) {
+                int id = rs.getInt("id");
+                String dataEntradaStr = rs.getString("entrada_hospital");
+                String dataSaidaStr = rs.getString("saida_hospital");
+                String diagnostico = rs.getString("diagnostico");
+                String doenca = rs.getString("doenca");
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                Date dataEntrada = dateFormat.parse(dataEntradaStr);
+                Date dataSaida = dateFormat.parse(dataSaidaStr);
+
+                System.out.format("| %3d | %-10tF | %-10tF | %-25s | %-15s |\n", id, dataEntrada, dataSaida, diagnostico, doenca);
+            }
+        } catch(Exception e){
+            System.out.println("------- ERRO: resgatar os prontuários -------");
             System.out.println(e.getMessage());
         }
     }
